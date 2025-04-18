@@ -11,5 +11,8 @@
   "workspaces": [
     "gatsby-theme-intro",
     "site"
-  ]
+  ],
+  "resolutions": {
+    "sharp": "0.30.7"
+  }
 }
