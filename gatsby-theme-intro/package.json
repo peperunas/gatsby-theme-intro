@@ -26,6 +26,9 @@
     "react": "^17.0.1",
     "tailwindcss": "^2.0.3"
   },
+  "resolutions": {
+    "sharp": "*"
+  },
   "peerDependencies": {
     "gatsby": "^3.0.0",
     "react": "^17.0.1",
