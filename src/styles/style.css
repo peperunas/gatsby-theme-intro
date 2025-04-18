@@ -1,0 +1,46 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --color-lead: #2d3748;
+  --color-back: #fff;
+  --color-back-light: #f7fafc;
+  --color-front: #1a202c;
+}
+
+/* Add subtle pattern to background */
+body {
+  background-image: radial-gradient(rgba(45, 55, 72, 0.2) 1px, transparent 1px);
+  background-size: 20px 20px;
+  font-family: "Roboto Mono", monospace;
+}
+
+code, pre {
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* Ensure consistent font usage throughout the site */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Fira Code", monospace;
+}
+
+p, div, span, li, a {
+  font-family: "Space Mono", monospace;
+}
+
+.font-header {
+  font-family: "Fira Code", monospace !important;
+}
+
+.font-text {
+  font-family: "Space Mono", monospace !important;
+}
+
+

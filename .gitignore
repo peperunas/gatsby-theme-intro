@@ -1,3 +1,7 @@
+site/content
 .cache
 public
 node_modules
+.aider*
+.env
+*.pdf

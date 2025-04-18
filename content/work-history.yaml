@@ -1,0 +1,26 @@
+- company: Atomic Studio
+  position: Senior Web Developer
+  period: January 2018 - present
+  url: https://atomic.studio
+  logo: FaAtom
+  # logoImage: images/logos/atomic.png
+
+- company: Atomic Studio
+  position: Web Developer
+  period: January 2014 - December 2017
+  url: https://atomic.studio
+  logo: FaAtom
+  # logoImage: images/logos/atomic.png
+
+- company: WebConnect Agency
+  position: Junior Web Developer
+  period: November 2010 - December 2013
+  url:
+  logo: FaNetworkWired
+  # logoImage: images/logos/webconnect.png
+
+- company: Freelance
+  position: Web Developer
+  period: April 2008 - October 2010
+  logo: FaLaptopCode
+  # logoImage: images/logos/freelance.png
