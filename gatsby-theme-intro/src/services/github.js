@@ -1,50 +1,11 @@
 import { Octokit } from "@octokit/rest"
-import { graphql } from "@octokit/graphql"
 
-// Initialize Octokit with a personal access token if available
-const octokit = new Octokit({
-  auth: process.env.GATSBY_GITHUB_TOKEN || "",
-})
+// Initialize Octokit without authentication
+// This will use GitHub's public API with rate limiting
+const octokit = new Octokit()
 
-// Initialize GraphQL client with the same token
-const graphqlWithAuth = graphql.defaults({
-  headers: {
-    authorization: `token ${process.env.GATSBY_GITHUB_TOKEN || ""}`,
-  },
-})
+// We'll use REST API instead of GraphQL for unauthenticated access
 
-// GraphQL query to fetch pinned repositories
-const PINNED_REPOS_QUERY = `
-  query getPinnedRepos($username: String!) {
-    user(login: $username) {
-      pinnedItems(first: 6, types: REPOSITORY) {
-        nodes {
-          ... on Repository {
-            name
-            description
-            url
-            homepageUrl
-            stargazerCount
-            forkCount
-            primaryLanguage {
-              name
-              color
-            }
-            updatedAt
-            isArchived
-            repositoryTopics(first: 10) {
-              nodes {
-                topic {
-                  name
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
 
 /**
  * Extract owner and repo from a GitHub URL
@@ -112,36 +73,38 @@ export const getGitHubData = async (url) => {
 }
 
 /**
- * Fetch pinned repositories for a GitHub user
+ * Fetch repositories for a GitHub user using the REST API
  * @param {string} username - GitHub username
- * @returns {Promise<Array>} - Array of pinned repository data
+ * @returns {Promise<Array>} - Array of repository data
  */
 export const getPinnedRepositories = async (username) => {
   if (!username) return []
   
   try {
-    const response = await graphqlWithAuth(PINNED_REPOS_QUERY, { username })
+    // Fetch user's repositories sorted by stars (as a proxy for pinned repos)
+    const { data } = await octokit.repos.listForUser({
+      username,
+      sort: 'updated',
+      per_page: 6
+    })
     
-    if (!response.user || !response.user.pinnedItems) {
-      return []
-    }
-    
-    return response.user.pinnedItems.nodes.map(repo => ({
+    // Map the repository data to our format
+    return data.map(repo => ({
       name: repo.name,
       description: repo.description,
-      url: repo.url,
-      website: repo.homepageUrl,
+      url: repo.html_url,
+      website: repo.homepage,
       image: null, // GitHub repos don't have preview images by default
-      status: repo.isArchived ? "archived" : "live",
-      stars: repo.stargazerCount,
-      forks: repo.forkCount,
-      language: repo.primaryLanguage ? repo.primaryLanguage.name : null,
-      languageColor: repo.primaryLanguage ? repo.primaryLanguage.color : null,
-      tags: repo.repositoryTopics.nodes.map(node => node.topic.name),
+      status: repo.archived ? "archived" : "live",
+      stars: repo.stargazers_count,
+      forks: repo.forks_count,
+      language: repo.language,
+      languageColor: null, // We don't get color from REST API
+      tags: [], // We don't get topics from this basic REST API call
       icon: "github"
     }))
   } catch (error) {
-    console.error(`Error fetching pinned repositories for ${username}:`, error)
+    console.error(`Error fetching repositories for ${username}:`, error)
     return []
   }
 }

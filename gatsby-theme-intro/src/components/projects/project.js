@@ -36,9 +36,9 @@ const Project = props => {
     ? githubData.description 
     : description
 
-  // Combine custom tags with GitHub topics
+  // Combine custom tags with GitHub topics (if available)
   const displayTags = tags || []
-  if (githubData && githubData.topics && githubData.topics.length > 0) {
+  if (githubData && githubData.topics && Array.isArray(githubData.topics) && githubData.topics.length > 0) {
     // Add GitHub topics that aren't already in tags
     githubData.topics.forEach(topic => {
       if (!displayTags.includes(topic)) {
