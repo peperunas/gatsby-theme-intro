@@ -28,6 +28,7 @@ const IndexPage = ({ data }) => {
           profile={profile}
           projects={projects.nodes}
           formspreeEndpoint={site.siteMetadata.formspreeEndpoint}
+          githubUsername={profile.github_username}
         />
       </div>
 
@@ -51,6 +52,7 @@ export const query = graphql`
     }
     profile: profileYaml {
       ...ProfileFragment
+      github_username
     }
     social: allSocialYaml(filter: { url: { ne: null } }) {
       nodes {
