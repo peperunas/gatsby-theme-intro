@@ -1,5 +1,6 @@
 import React from "react"
 import Location from "./location"
+import About from "../about/about"
 import ProfileImage from "./profile-image"
 import { arrayOf, shape, ProfileType, SocialType } from "../../types"
 import SocialLinks from "../social-links/social-links"
