@@ -1,12 +1,52 @@
 import { GatsbyImage } from "gatsby-plugin-image"
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { ProjectType } from "../../types"
 import ProjectIcon from "./project-icon"
 import ProjectStatus from "./project-status"
 import ProjectTags from "./project-tags"
+import GitHubRepoInfo from "./github-repo-info"
+import { getGitHubData } from "../../services/github"
 
 const Project = props => {
   const { name, image, url, description, status, tags, icon } = props
+  const [githubData, setGithubData] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const fetchGitHubData = async () => {
+      // Only fetch data for GitHub URLs
+      if (url && url.includes("github.com") && icon === "github") {
+        setIsLoading(true)
+        try {
+          const data = await getGitHubData(url)
+          setGithubData(data)
+        } catch (error) {
+          console.error("Error fetching GitHub data:", error)
+        } finally {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    fetchGitHubData()
+  }, [url, icon])
+
+  // Use GitHub description if available and no custom description is provided
+  const displayDescription = (githubData && !description) 
+    ? githubData.description 
+    : description
+
+  // Combine custom tags with GitHub topics
+  const displayTags = tags || []
+  if (githubData && githubData.topics && githubData.topics.length > 0) {
+    // Add GitHub topics that aren't already in tags
+    githubData.topics.forEach(topic => {
+      if (!displayTags.includes(topic)) {
+        displayTags.push(topic)
+      }
+    })
+  }
+
   return (
     <div className="border-t-4 border-line relative flex flex-wrap bg-back-light p-4 lg:p-8 bg-no-repeat text-sm mb-6">
       {image && (
@@ -26,11 +66,22 @@ const Project = props => {
             {url}
           </a>
         )}
-        <p className="w-full py-4 whitespace-pre-line">{description}</p>
-        <ul className="pr-2">
-          {status && <ProjectStatus status={status} />}
-          {tags && <ProjectTags tags={tags} />}
-        </ul>
+        
+        {isLoading ? (
+          <p className="w-full py-4">Loading project information...</p>
+        ) : (
+          <>
+            <p className="w-full py-4 whitespace-pre-line">{displayDescription}</p>
+            
+            {/* GitHub repository information */}
+            {githubData && <GitHubRepoInfo repoData={githubData} />}
+            
+            <ul className="pr-2 mt-2">
+              {status && <ProjectStatus status={status} />}
+              {displayTags.length > 0 && <ProjectTags tags={displayTags} />}
+            </ul>
+          </>
+        )}
 
         {icon && <ProjectIcon icon={icon} />}
       </div>
