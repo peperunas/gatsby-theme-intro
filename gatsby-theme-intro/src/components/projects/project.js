@@ -1,8 +1,8 @@
 import { GatsbyImage } from "gatsby-plugin-image"
 import React, { useState, useEffect } from "react"
 import { ProjectType } from "../../types"
-import ProjectIcon from "./project-icon"
 import ProjectTags from "./project-tags"
+import ProjectBackgroundIcon from "./project-background-icon"
 import GitHubRepoInfo from "./github-repo-info"
 import { getGitHubData } from "../../services/github"
 
@@ -47,7 +47,7 @@ const Project = props => {
   }
 
   return (
-    <div className="border-t-4 border-line relative flex flex-wrap bg-back-light p-4 lg:p-8 bg-no-repeat text-sm mb-6">
+    <div className="border-t-4 border-line relative flex flex-wrap bg-back-light p-4 lg:p-8 bg-no-repeat text-sm mb-6 overflow-hidden">
       {image && (
         <div className="w-full pb-4 lg:w-2/5 lg:pr-8 lg:pb-0">
           <GatsbyImage image={image.childImageSharp.gatsbyImageData} alt={name} />
@@ -84,7 +84,7 @@ const Project = props => {
           </>
         )}
 
-        {icon && <ProjectIcon icon={icon} />}
+        {icon && <ProjectBackgroundIcon icon={icon} />}
       </div>
     </div>
   )
