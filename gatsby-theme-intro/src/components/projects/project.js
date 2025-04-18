@@ -54,17 +54,20 @@ const Project = props => {
         </div>
       )}
       <div className="lg:flex-1">
-        <h4 className="font-bold">{name}</h4>
-        {url && (
-          <a
-            className="text-front underline break-all hover:opacity-75 transition-opacity duration-150"
-            href={url}
-            rel="noreferrer noopener"
-            target="_blank"
-          >
-            {url}
-          </a>
-        )}
+        <h4 className="font-bold">
+          {url ? (
+            <a
+              className="hover:opacity-75 transition-opacity duration-150"
+              href={url}
+              rel="noreferrer noopener"
+              target="_blank"
+            >
+              {name}
+            </a>
+          ) : (
+            name
+          )}
+        </h4>
         
         {isLoading ? (
           <p className="w-full py-4">Loading project information...</p>
