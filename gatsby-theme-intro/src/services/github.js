@@ -95,7 +95,6 @@ export const getPinnedRepositories = async (username) => {
       url: repo.html_url,
       website: repo.homepage,
       image: null, // GitHub repos don't have preview images by default
-      status: repo.archived ? "archived" : "live",
       stars: repo.stargazers_count,
       forks: repo.forks_count,
       language: repo.language,

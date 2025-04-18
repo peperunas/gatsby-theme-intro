@@ -1,7 +1,6 @@
 - name: Example 1
   url: https://github.com
   description: Override the digital divide with additional clickthroughs from DevOps. User generated content in real-time will have multiple touchpoints for offshoring.
-  status: in progress
   tags:
     - JavaScript
     - Gatsby
@@ -10,7 +9,6 @@
 - name: Example 2
   url: https://github.com
   description: Leverage agile frameworks to provide a robust synopsis for high level overviews.
-  status: live
   tags:
     - JavaScript
     - HTML

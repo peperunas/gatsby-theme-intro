@@ -2,7 +2,6 @@ import { GatsbyImage } from "gatsby-plugin-image"
 import React, { useState, useEffect } from "react"
 import { ProjectType } from "../../types"
 import ProjectIcon from "./project-icon"
-import ProjectStatus from "./project-status"
 import ProjectTags from "./project-tags"
 import GitHubRepoInfo from "./github-repo-info"
 import { getGitHubData } from "../../services/github"
@@ -77,7 +76,6 @@ const Project = props => {
             {githubData && <GitHubRepoInfo repoData={githubData} />}
             
             <ul className="pr-2 mt-2">
-              {status && <ProjectStatus status={status} />}
               {displayTags.length > 0 && <ProjectTags tags={displayTags} />}
             </ul>
           </>
