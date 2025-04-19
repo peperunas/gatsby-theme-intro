@@ -3,3 +3,4 @@ site/content
 public
 node_modules
 .aider*
+.env

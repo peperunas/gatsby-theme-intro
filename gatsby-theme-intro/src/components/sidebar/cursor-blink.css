@@ -1,0 +1,14 @@
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink {
+  display: inline-block;
+  color: var(--color-lead);
+  margin-left: 0.1em;
+  animation: blink 1s step-end infinite;
+  font-weight: bold;
+  font-size: 0.9em;
+  font-family: "Fira Code", monospace;
+}

@@ -47,43 +47,55 @@ const Project = props => {
   }
 
   return (
-    <div className="border-t-4 border-line relative flex flex-wrap bg-back-light p-4 lg:p-8 bg-no-repeat text-sm mb-6 overflow-hidden">
+    <div className="border-t-4 border-line relative flex flex-wrap p-4 lg:p-8 bg-no-repeat text-sm mb-8 overflow-hidden project-card">
       {image && (
-        <div className="w-full pb-4 lg:w-2/5 lg:pr-8 lg:pb-0">
-          <GatsbyImage image={image.childImageSharp.gatsbyImageData} alt={name} />
+        <div className="w-full pb-4 lg:w-2/5 lg:pr-8 lg:pb-0 overflow-hidden rounded-md">
+          <GatsbyImage image={image.childImageSharp.gatsbyImageData} alt={name} className="project-image" />
         </div>
       )}
       <div className="lg:flex-1">
-        <h4 className="font-bold">
-          {url ? (
-            <a
-              className="hover:opacity-75 transition-opacity duration-150"
-              href={url}
-              rel="noreferrer noopener"
-              target="_blank"
-            >
-              {name}
-            </a>
-          ) : (
-            name
-          )}
-        </h4>
+        {/* Title without background */}
+        <div className="px-3 py-2 pt-1 w-full text-center mb-4 project-title">
+          <h3 className="font-bold text-front text-lg uppercase tracking-wider">
+            {url ? (
+              <a
+                className="hover:opacity-75 transition-opacity duration-150"
+                href={url}
+                rel="noreferrer noopener"
+                target="_blank"
+              >
+                {name}
+              </a>
+            ) : (
+              name
+            )}
+          </h3>
+        </div>
         
         {isLoading ? (
           <p className="w-full py-4">Loading project information...</p>
         ) : (
           <>
-            <p className="w-full py-4 whitespace-pre-line">{displayDescription}</p>
+            {/* Description without background */}
+            <div className="w-full my-4 p-3">
+              <p className="whitespace-pre-line text-front text-base leading-relaxed font-mono">{displayDescription}</p>
+            </div>
             
             {/* GitHub repository information */}
             {githubData && <GitHubRepoInfo repoData={githubData} />}
             
-            <ul className="pr-2 mt-2">
-              {displayTags.length > 0 && <ProjectTags tags={displayTags} />}
-            </ul>
+            {/* Tags without background */}
+            {displayTags.length > 0 && (
+              <div className="mt-4 p-2">
+                <ul className="pr-2">
+                  <ProjectTags tags={displayTags} />
+                </ul>
+              </div>
+            )}
           </>
         )}
 
+        {/* Position the icon with higher z-index to appear above the repo info bar */}
         {icon && <ProjectBackgroundIcon icon={icon} />}
       </div>
     </div>

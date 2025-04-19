@@ -1,10 +1,27 @@
 import { Octokit } from "@octokit/rest"
+import { request } from "@octokit/request"
 
-// Initialize Octokit without authentication
-// This will use GitHub's public API with rate limiting
-const octokit = new Octokit()
+// Check for GitHub token in environment variables
+// Use GATSBY_ prefix for browser-accessible variables
+const githubToken = process.env.GATSBY_GITHUB_TOKEN
 
-// We'll use REST API instead of GraphQL for unauthenticated access
+// Log token status for debugging (redacted for security)
+console.log("GitHub token status:", githubToken ? "Token found ✓" : "No token found ✗")
+console.log("Token value (first few chars):", githubToken ? `${githubToken.substring(0, 4)}...` : "None")
+
+// Initialize Octokit with authentication if token is available
+const octokit = new Octokit(githubToken ? {
+  auth: githubToken
+} : {})
+
+// Configure request with auth token if available
+const authenticatedRequest = githubToken 
+  ? request.defaults({
+      headers: {
+        authorization: `token ${githubToken}`,
+      },
+    })
+  : request
 
 
 /**
@@ -73,7 +90,7 @@ export const getGitHubData = async (url) => {
 }
 
 /**
- * Fetch repositories for a GitHub user using the REST API
+ * Fetch pinned repositories for a GitHub user using the GraphQL API
  * @param {string} username - GitHub username
  * @returns {Promise<Array>} - Array of repository data
  */
@@ -81,29 +98,91 @@ export const getPinnedRepositories = async (username) => {
   if (!username) return []
   
   try {
-    // Fetch user's repositories sorted by stars (as a proxy for pinned repos)
-    const { data } = await octokit.repos.listForUser({
-      username,
-      sort: 'updated',
-      per_page: 6
+    // Use GitHub's GraphQL API to fetch pinned repositories
+    const query = `
+      query {
+        user(login: "${username}") {
+          pinnedItems(first: 6, types: REPOSITORY) {
+            nodes {
+              ... on Repository {
+                name
+                description
+                url
+                homepageUrl
+                stargazerCount
+                forkCount
+                primaryLanguage {
+                  name
+                  color
+                }
+                repositoryTopics(first: 10) {
+                  nodes {
+                    topic {
+                      name
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `
+    
+    // Make the GraphQL request with authentication if available
+    const response = await authenticatedRequest('POST /graphql', {
+      headers: {
+        'content-type': 'application/json',
+      },
+      data: { query }
     })
     
+    // Extract pinned repositories from the response
+    const pinnedRepos = response.data?.data?.user?.pinnedItems?.nodes || []
+    
     // Map the repository data to our format
-    return data.map(repo => ({
+    return pinnedRepos.map(repo => ({
       name: repo.name,
       description: repo.description,
-      url: repo.html_url,
-      website: repo.homepage,
+      url: repo.url,
+      website: repo.homepageUrl,
       image: null, // GitHub repos don't have preview images by default
-      stars: repo.stargazers_count,
-      forks: repo.forks_count,
-      language: repo.language,
-      languageColor: null, // We don't get color from REST API
-      tags: [], // We don't get topics from this basic REST API call
+      stars: repo.stargazerCount,
+      forks: repo.forkCount,
+      language: repo.primaryLanguage?.name,
+      languageColor: repo.primaryLanguage?.color,
+      tags: repo.repositoryTopics?.nodes?.map(node => node.topic.name) || [],
       icon: "github"
     }))
   } catch (error) {
-    console.error(`Error fetching repositories for ${username}:`, error)
-    return []
+    console.error(`Error fetching pinned repositories for ${username}:`, error)
+    
+    // Fallback to REST API if GraphQL fails
+    try {
+      console.log("Falling back to REST API for repositories")
+      const { data } = await octokit.repos.listForUser({
+        username,
+        sort: 'stars',
+        direction: 'desc',
+        per_page: 6
+      })
+      
+      return data.map(repo => ({
+        name: repo.name,
+        description: repo.description,
+        url: repo.html_url,
+        website: repo.homepage,
+        image: null,
+        stars: repo.stargazers_count,
+        forks: repo.forks_count,
+        language: repo.language,
+        languageColor: null,
+        tags: [],
+        icon: "github"
+      }))
+    } catch (fallbackError) {
+      console.error(`Fallback also failed for ${username}:`, fallbackError)
+      return []
+    }
   }
 }

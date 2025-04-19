@@ -1,8 +1,14 @@
+require('dotenv').config({
+  path: `${process.cwd()}/.env`,
+})
+console.log("Config: Loading env from:", `${process.cwd()}/.env`)
+console.log("Config: GitHub token:", process.env.GATSBY_GITHUB_TOKEN ? "Found" : "Not found")
+
 module.exports = {
   siteMetadata: {
-    description: "Personal page of John Doe",
+    description: "Giulio's Personal Page",
     locale: "en",
-    title: "John Doe",
+    title: "Giulio De Pasquale",
   },
   plugins: [
     {
@@ -10,8 +16,8 @@ module.exports = {
       options: {
         basePath: "/",
         contentPath: "content/",
-        showThemeLogo: true,
-        theme: "classic",
+        showThemeLogo: false,
+        theme: "dark-blue",
       },
     },
   ],

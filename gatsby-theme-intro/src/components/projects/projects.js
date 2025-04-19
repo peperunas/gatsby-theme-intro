@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import Project from "./project"
 import { arrayOf, shape, ProjectType, string } from "../../types"
 import { getPinnedRepositories } from "../../services/github"
+import "./project-hover.css"
 
 const Projects = ({ projects, githubUsername }) => {
   const [pinnedRepos, setPinnedRepos] = useState([])
@@ -30,7 +31,7 @@ const Projects = ({ projects, githubUsername }) => {
 
   return (
     <>
-      <h5 className="font-header font-semibold text-front text-sm uppercase mb-3">
+      <h5 id="projects" className="font-header font-bold text-front text-2xl uppercase mt-8 mb-5 sticky top-0 bg-back z-50 py-2 border-b-2 border-line">
         Projects
       </h5>
       {isLoading && (

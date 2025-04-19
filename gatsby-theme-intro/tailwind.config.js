@@ -14,8 +14,8 @@ module.exports = theme => {
     darkMode: false,
     theme: {
       fontFamily: {
-        header: ["Source Sans Pro", "sans-serif"],
-        text: ["Roboto", "sans-serif"],
+        header: ["Fira Code", "monospace"],
+        text: ["Space Mono", "monospace"],
       },
       extend: {
         colors: {

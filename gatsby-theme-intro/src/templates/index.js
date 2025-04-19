@@ -2,7 +2,6 @@ import { graphql } from "gatsby"
 import React from "react"
 import CustomFonts from "../components/custom-fonts/custom-fonts"
 import Footer from "../components/footer/footer"
-import Header from "../components/header/header"
 import MainContent from "../components/main-content/main-content"
 import SEO from "../components/seo/seo"
 import Sidebar from "../components/sidebar/sidebar"
@@ -13,14 +12,12 @@ const IndexPage = ({ data }) => {
   const { history, profile, projects, site, social } = data
 
   return (
-    <div className="antialiased bg-back leading-normal font-text text-front">
+    <div className="antialiased bg-back leading-normal font-text text-front min-h-screen">
       <SEO />
       <StructuredData profile={profile} social={social.nodes} />
       <CustomFonts />
 
-      <Header initials={profile.initials} />
-
-      <div className="md:max-w-screen-sm lg:max-w-screen-xl mx-auto px-4 flex flex-wrap pt-4 my-8">
+      <div className="md:max-w-screen-sm lg:max-w-screen-xl mx-auto px-4 flex flex-wrap pt-0 my-0 mb-0 pb-0">
         <Sidebar profile={profile} social={social.nodes} />
 
         <MainContent

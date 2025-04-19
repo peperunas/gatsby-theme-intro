@@ -6,38 +6,34 @@ const GitHubRepoInfo = ({ repoData }) => {
 
   return (
     <div className="mt-4 flex flex-wrap items-center text-xs text-front">
-      {repoData.language && (
-        <div className="mr-4 flex items-center">
-          <FaCircle className="mr-1 h-2 w-2" style={{ color: getLanguageColor(repoData.language) }} />
-          <span>{repoData.language}</span>
+      <div className="w-full py-3 px-4 rounded-md bg-back-light border border-line flex flex-wrap items-center" style={{ position: 'relative', zIndex: 10 }}>
+        {repoData.language && (
+          <div className="mr-5 flex items-center">
+            <FaCircle className="mr-2 h-3 w-3" style={{ color: getLanguageColor(repoData.language) }} />
+            <span className="text-front text-sm">{repoData.language}</span>
+          </div>
+        )}
+
+        <div className="mr-5 flex items-center">
+          <FaStar className="mr-2 h-4 w-4 text-front" />
+          <span className="text-front text-sm">{repoData.stars.toLocaleString()}</span>
         </div>
-      )}
-      
-      {repoData.stars > 0 && (
-        <div className="mr-4 flex items-center">
-          <FaStar className="mr-1 h-3 w-3" />
-          <span>{repoData.stars.toLocaleString()}</span>
+
+        <div className="mr-5 flex items-center">
+          <FaCodeBranch className="mr-2 h-4 w-4 text-front" />
+          <span className="text-front text-sm">{repoData.forks.toLocaleString()}</span>
         </div>
-      )}
-      
-      {repoData.forks > 0 && (
-        <div className="mr-4 flex items-center">
-          <FaCodeBranch className="mr-1 h-3 w-3" />
-          <span>{repoData.forks.toLocaleString()}</span>
-        </div>
-      )}
-      
-      {repoData.updatedAt && (
-        <div className="text-xs text-front-light">
+
+        <div className="text-sm text-front">
           Updated: {new Date(repoData.updatedAt).toLocaleDateString()}
         </div>
-      )}
-      
-      {repoData.isArchived && (
-        <div className="ml-auto rounded bg-yellow-200 px-2 py-1 text-xs text-yellow-800">
-          Archived
-        </div>
-      )}
+
+        {repoData.isArchived && (
+          <div className="ml-auto rounded bg-yellow-200 px-2 py-1 text-xs text-yellow-800">
+            Archived
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -61,8 +57,14 @@ const getLanguageColor = (language) => {
     Kotlin: "#F18E33",
     Rust: "#dea584",
     Dart: "#00B4AB",
+    Shell: "#89e051",
+    PowerShell: "#012456",
+    Elixir: "#6e4a7e",
+    Haskell: "#5e5086",
+    Clojure: "#db5855",
+    Scala: "#c22d40"
   }
-  
+
   return colors[language] || "#858585"
 }
 

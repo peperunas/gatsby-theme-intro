@@ -17,9 +17,15 @@ module.exports = ({ reporter }, options) => {
       "projects.yaml",
       "social.yaml",
       "work-history.yaml",
+      "publications.yaml",
       "images/profile.jpg",
       "images/project.jpg",
     ]
+
+    // Create papers directory
+    if (!fs.existsSync(`${contentPath}papers`)) {
+      fs.mkdirSync(`${contentPath}papers`);
+    }
 
     filesToCopy.forEach(file =>
       fs.copyFileSync(
