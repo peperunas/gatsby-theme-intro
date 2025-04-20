@@ -8,7 +8,7 @@ import "./cursor-blink.css"
 import { FaEnvelope } from "react-icons/fa"
 
 const Sidebar = ({ profile, social }) => (
-  <aside className="w-full lg:w-1/3 lg:px-6 xl:px-12 bg-back-light bg-opacity-50">
+  <aside className="w-full lg:w-1/3 lg:px-6 xl:px-12 lg:bg-back-light lg:bg-opacity-50">
     <div className="flex flex-col items-center lg:items-start lg:sticky lg:top-0 lg:h-screen pt-8 pb-8 mb-0">
       <div className="text-center lg:text-left w-full px-4 lg:px-0">
         <h2 className="font-header font-light text-front text-2xl lg:text-3xl leading-none mb-4">
