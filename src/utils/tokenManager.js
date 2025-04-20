@@ -34,16 +34,5 @@ export const destroyGitHubToken = () => {
     _githubToken = "";
     _githubToken = null;
     _tokenUsed = true;
-    
-    // Also remove from environment if possible
-    if (typeof process !== 'undefined' && process.env && process.env.GATSBY_GITHUB_TOKEN) {
-      try {
-        process.env.GATSBY_GITHUB_TOKEN = "";
-        delete process.env.GATSBY_GITHUB_TOKEN;
-      } catch (e) {
-        // Environment variables might be read-only in some contexts
-        console.debug("Note: Could not remove token from environment");
-      }
-    }
   }
 };
