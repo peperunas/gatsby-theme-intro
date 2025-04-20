@@ -25,11 +25,11 @@
     "react-helmet": "^6.1.0",
     "react-icons": "^4.2.0",
     "react": "^17.0.1",
-    "sharp": "^0.30.7",
+    "sharp": "~0.34",
     "tailwindcss": "^2.0.3"
   },
   "resolutions": {
-    "sharp": "0.30.7"
+    "sharp": "~0.34"
   },
   "peerDependencies": {
     "gatsby": "^3.0.0",
