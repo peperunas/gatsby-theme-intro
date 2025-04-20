@@ -6,9 +6,11 @@ const Publication = ({ title, authors, journal, year, abstract, pdfUrl, citation
 
   return (
     <div 
-      className="border-t-4 border-line relative flex flex-wrap p-4 lg:p-8 bg-no-repeat text-sm mb-8 overflow-hidden project-card"
+      className="border-t-4 border-line relative flex flex-wrap p-4 lg:p-8 bg-no-repeat text-sm mb-8 overflow-hidden project-card w-full max-w-full"
       style={{ 
         transition: 'box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out',
+        wordWrap: 'break-word',
+        overflowWrap: 'break-word'
       }}
       onMouseOver={(e) => {
         e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
@@ -112,8 +114,14 @@ const Publication = ({ title, authors, journal, year, abstract, pdfUrl, citation
         
         {/* Citation Box */}
         {citation && showCitation && (
-          <div className="mt-4 p-4 mx-3 bg-lead bg-opacity-5 rounded-lg border border-line font-mono text-sm overflow-hidden">
-            <pre className="whitespace-pre-wrap break-words w-full max-w-full">{citation}</pre>
+          <div className="mt-4 p-4 mx-3 bg-lead bg-opacity-5 rounded-lg border border-line font-mono text-sm overflow-hidden w-full">
+            <pre style={{
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
+              maxWidth: '100%',
+              width: '100%'
+            }}>{citation}</pre>
           </div>
         )}
       </div>
