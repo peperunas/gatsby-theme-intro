@@ -5,6 +5,7 @@ import ProjectTags from "./project-tags"
 import ProjectBackgroundIcon from "./project-background-icon"
 import GitHubRepoInfo from "./github-repo-info"
 import { getGitHubData } from "../../services/github"
+import { destroyGitHubToken } from "../../utils/tokenManager"
 
 const Project = props => {
   const { name, image, url, description, status, tags, icon } = props

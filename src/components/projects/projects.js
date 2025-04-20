@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import Project from "./project"
 import { arrayOf, shape, ProjectType, string } from "../../types"
 import { getPinnedRepositories } from "../../services/github"
+import { destroyGitHubToken } from "../../utils/tokenManager"
 import "./project-hover.css"
 
 const Projects = ({ projects, githubUsername }) => {
@@ -25,6 +26,20 @@ const Projects = ({ projects, githubUsername }) => {
 
     fetchPinnedRepos()
   }, [githubUsername])
+  
+  // Destroy token after all projects are rendered
+  useEffect(() => {
+    // This will run after the component has rendered
+    if (!isLoading && pinnedRepos.length > 0) {
+      // Small delay to ensure all API calls are complete
+      const cleanupTimer = setTimeout(() => {
+        destroyGitHubToken();
+        console.debug("GitHub token has been destroyed");
+      }, 1000);
+      
+      return () => clearTimeout(cleanupTimer);
+    }
+  }, [isLoading, pinnedRepos]);
 
   // Combine manual projects with pinned GitHub repos
   const allProjects = [...projects, ...pinnedRepos]

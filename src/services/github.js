@@ -1,23 +1,46 @@
 import { Octokit } from "@octokit/rest"
 import { request } from "@octokit/request"
+import { getGitHubToken } from "../utils/tokenManager"
 
-// Check for GitHub token in environment variables
-// Use GATSBY_ prefix for browser-accessible variables
-const githubToken = process.env.GATSBY_GITHUB_TOKEN
+// Initialize Octokit lazily to avoid token exposure
+let octokit = null;
+let authenticatedRequest = null;
 
-// Initialize Octokit with authentication if token is available
-const octokit = new Octokit(githubToken ? {
-  auth: githubToken
-} : {})
+/**
+ * Get authenticated Octokit instance
+ * @returns {Octokit} Authenticated Octokit instance
+ */
+const getOctokit = () => {
+  if (!octokit) {
+    const token = getGitHubToken();
+    octokit = new Octokit(token ? { auth: token } : {});
+  }
+  return octokit;
+};
 
-// Configure request with auth token if available
-const authenticatedRequest = githubToken 
-  ? request.defaults({
-      headers: {
-        authorization: `token ${githubToken}`,
-      },
-    })
-  : request
+/**
+ * Get authenticated request function
+ * @returns {Function} Authenticated request function
+ */
+const getAuthenticatedRequest = () => {
+  if (!authenticatedRequest) {
+    const token = getGitHubToken();
+    authenticatedRequest = token 
+      ? request.defaults({
+          headers: {
+            authorization: `token ${token}`,
+          },
+        })
+      : request;
+  }
+  return authenticatedRequest;
+};
+
+// Clear references to auth objects
+const clearAuthObjects = () => {
+  octokit = null;
+  authenticatedRequest = null;
+};
 
 
 /**
@@ -46,6 +69,15 @@ export const parseGitHubUrl = (url) => {
 }
 
 /**
+ * Clean up all GitHub API resources and destroy token
+ * Call this after all GitHub data has been fetched
+ */
+export const cleanupGitHubResources = () => {
+  clearAuthObjects();
+  destroyGitHubToken();
+};
+
+/**
  * Fetch repository data from GitHub API
  * @param {string} owner - Repository owner
  * @param {string} repo - Repository name
@@ -53,10 +85,11 @@ export const parseGitHubUrl = (url) => {
  */
 export const fetchRepositoryData = async (owner, repo) => {
   try {
-    const { data } = await octokit.repos.get({
+    const api = getOctokit();
+    const { data } = await api.repos.get({
       owner,
       repo,
-    })
+    });
     
     return {
       description: data.description,
@@ -66,10 +99,10 @@ export const fetchRepositoryData = async (owner, repo) => {
       updatedAt: data.updated_at,
       isArchived: data.archived,
       topics: data.topics || [],
-    }
+    };
   } catch (error) {
-    console.error(`Error fetching GitHub data for ${owner}/${repo}:`, error)
-    return null
+    console.error(`Error fetching GitHub data for ${owner}/${repo}:`, error);
+    return null;
   }
 }
 
@@ -126,7 +159,8 @@ export const getPinnedRepositories = async (username) => {
     `
     
     // Make the GraphQL request with authentication if available
-    const response = await authenticatedRequest('POST /graphql', {
+    const auth = getAuthenticatedRequest();
+    const response = await auth('POST /graphql', {
       headers: {
         'content-type': 'application/json',
       },
@@ -156,7 +190,8 @@ export const getPinnedRepositories = async (username) => {
     // Fallback to REST API if GraphQL fails
     try {
       console.log("Falling back to REST API for repositories")
-      const { data } = await octokit.repos.listForUser({
+      const api = getOctokit();
+      const { data } = await api.repos.listForUser({
         username,
         sort: 'stars',
         direction: 'desc',
