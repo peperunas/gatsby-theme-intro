@@ -31,11 +31,6 @@
   "resolutions": {
     "sharp": "~0.34"
   },
-  "peerDependencies": {
-    "gatsby": "^3.0.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
-  },
   "keywords": [
     "gatsby",
     "gatsby-plugin",
