@@ -112,8 +112,8 @@ const Publication = ({ title, authors, journal, year, abstract, pdfUrl, citation
         
         {/* Citation Box */}
         {citation && showCitation && (
-          <div className="mt-4 p-4 mx-3 bg-lead bg-opacity-5 rounded-lg border border-line font-mono text-sm overflow-x-auto">
-            <pre className="whitespace-pre-wrap">{citation}</pre>
+          <div className="mt-4 p-4 mx-3 bg-lead bg-opacity-5 rounded-lg border border-line font-mono text-sm overflow-hidden">
+            <pre className="whitespace-pre-wrap break-words w-full max-w-full">{citation}</pre>
           </div>
         )}
       </div>
